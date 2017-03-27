@@ -1,0 +1,16 @@
+{
+  "name": "ui.ap",
+  "version": "0.1.0",
+  "authors": [
+    "Andrey Pavlov <andrew.m.pavlov@gmail.com>"
+  ],
+  "license": "MIT",
+  "private": false,
+  "homepage": "https://github.com/andrewpavlov/ui.ap",
+  "dependencies": {
+    "angular": "^1.6.1",
+    "angular-ui-router": "^0.3.1",
+    "angular-bootstrap": "^2.5.0"
+  },
+  "main": "./build/ui.ap.js"
+}

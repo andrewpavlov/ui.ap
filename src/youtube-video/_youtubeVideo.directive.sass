@@ -1,0 +1,55 @@
+.ap-youtube-video
+  .ap-youtube-video__watch-video
+    .btn
+      position: absolute
+      bottom: 3rem
+      height: auto
+      left: 50%
+      width: 210px
+      margin-left: -105px
+      background: #59595a
+      border-color: #59595a
+      color: #fff
+      opacity: .7
+    cursor: pointer
+  &:hover
+    .btn
+      @extend .btn:hover
+      opacity: 1
+.ap-video
+  position: fixed
+  left: 0
+  top: 0
+  width: 100%
+  height: 100%
+  background: #fff
+  background: rgba(255, 255, 255, .96)
+  z-index: 10000
+  overflow: hidden
+  .close
+    position: absolute
+    right: 0
+    margin: .2em .5em
+    font-size: 1.3em
+    line-height: 1.3em
+    cursor: pointer
+    .glyphicon
+      margin-top: 1rem
+      margin-right: 1rem
+      font-size: 2em
+  .iframe
+    position: relative
+    margin: 0 auto
+    top: 10%
+    width: 900px
+    height: 536px
+    border: 1px solid #ccc
+    -webkit-box-shadow: 0 0 10px #ccc
+    -moz-box-shadow: 0 0 10px #ccc
+    box-shadow: 0 0 10px #ccc
+    iframe
+      position: absolute
+      left: 0
+      top: 0
+      width: 100%
+      height: 100%

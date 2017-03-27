@@ -1,0 +1,7 @@
+node_modules/
+bower_components/
+.idea/
+tmp/
+npm-debug.log
+.tags
+.tags1

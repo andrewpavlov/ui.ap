@@ -1,0 +1,9 @@
+<a class="ap-youtube-video__watch-video"
+   ng-href="{{ mobileBrowser() ? '//www.youtube.com/watch?v=' + youId : '' }}"
+   ng-click="watchVideo(youId)">
+    <ng-transclude></ng-transclude>
+    <button ng-if="btnClass" class="btn" type="button"
+            ng-class="btnClass">
+        {{ placeholder }}
+    </button>
+</a>

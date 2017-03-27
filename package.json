@@ -1,0 +1,14 @@
+{
+  "name": "ui.ap",
+  "version": "0.1.0",
+  "description": "ui components",
+  "author": "Andrey Pavlov <andrew.m.pavlov@gmail.com>",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-htmlmin": "^3.0.0",
+    "gulp-ng-html2js": "^0.2.2",
+    "gulp-rename": "^1.2.2"
+  },
+  "dependencies": {}
+}

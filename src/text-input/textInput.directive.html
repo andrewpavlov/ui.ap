@@ -1,0 +1,19 @@
+<div class="ap-text-input-wrapper">
+    <label class="ap-text-input-label"
+           ng-if="label"
+           ng-click="onFocus()"
+           for="{{ inputId }}"
+           ng-bind="label"
+    ></label>
+    <input class="ap-text-input-value form-control"
+           type="{{ type }}" name="{{ name }}"
+           id="{{ inputId }}"
+           ng-pattern="ngPattern"
+           ng-required="ngRequired"
+           ng-disabled="ngDisabled"
+           ng-readonly="ngReadonly"
+           ng-change="wpChange()"
+           ng-model="ngModel"/>
+    <ng-transclude></ng-transclude>
+    <span class="ap-text-input-label-error" ng-bind="errorMessage"></span>
+</div>

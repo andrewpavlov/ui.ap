@@ -1,0 +1,44 @@
+.ap-text-input
+  display: block
+  margin: .5em 0
+  background: transparent
+  .ap-text-input-wrapper
+    position: relative
+  //.ap-text-input-value
+  .ap-text-input-label-error
+    //@extend .ap-ellipsis-nowrap
+    @extend .ap-ellipsis
+    display: none
+    max-width: 100%
+  &.ap-text-input-error
+    .ap-text-input-value
+      border-color: $tex-input-error-border-color
+    //margin-bottom: 1rem
+    .ap-text-input-label-error
+      color: $tex-input-error-label-color
+      display: inherit
+      margin-top: .1em
+  &.ap-text-input-style-2
+    label
+      color: $tex-input-label-color
+      position: relative
+      //top: .2em
+      font-size: .9em
+      margin: 0
+    .form-control
+      background: transparent
+      font-size: 1.1em
+      border-width: 0 0 1px 0
+      border-radius: 0
+      box-shadow: none
+      padding-left: 0
+      padding-right: 0
+      //padding-top: 1.65em
+      height: auto
+    .form-control[readonly]
+      background: transparent
+  &.ap-text-input-disabled
+    label
+      color: $tex-input-disabled-label-color
+    .ap-text-input-value
+      color: $tex-input-disabled-input-color

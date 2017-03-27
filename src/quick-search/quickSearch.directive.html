@@ -1,0 +1,8 @@
+<div class="ap-inner-addon ap-search-addon" ng-class="{'ap-dirty-addon' : quickSearchText}">
+    <input  class="form-control"
+            type="text" placeholder="Quick search"
+            ng-model="quickSearchText"
+        />
+    <span class="glyphicon glyphicon-search"></span>
+    <span class="glyphicon glyphicon-remove" ng-click="quickSearchText = ''"></span>
+</div>

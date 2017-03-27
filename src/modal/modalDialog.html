@@ -1,0 +1,19 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{ vm.title }}</h3>
+    <div class="modal-body">
+        {{ vm.message }}
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-ok" type="button"
+                auto-focus="{{ vm.default === 'ok' }}"
+                ng-click="vm.ok()">
+            {{ vm.buttons.ok }}
+        </button>
+        <button class="btn btn-cancel" type="button"
+                auto-focus="{{ vm.default === 'cancel' }}"
+                ng-if="vm.buttons.cancel"
+                ng-click="vm.cancel()">
+            {{ vm.buttons.cancel }}
+        </button>
+    </div>
+</div>

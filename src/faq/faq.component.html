@@ -1,0 +1,14 @@
+<div class="ap-faq">
+    <h3>{{ vm.header }}</h3>
+    <ul class="list-unstyled">
+        <li class="ap-faq__item"
+            ng-repeat="item in vm.items"
+            ng-click="item.opened = !item.opened">
+            <div class="ap-faq__item__q"
+                 ng-class="{'ap-active' : item.opened}">
+                {{ item.q }}
+            </div>
+            <div ng-show="item.opened" class="ap-faq__item__a" ng-bind-html="item.a"></div>
+        </li>
+    </ul>
+</div>
