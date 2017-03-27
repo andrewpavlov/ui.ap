@@ -435,77 +435,88 @@
 
     angular
         .module('ui.ap.faq', [])
-        .component('faq', {
-            templateUrl: 'view/faq.component.html',
-            controller: Controller,
-            controllerAs: 'vm',
-            bindings: {
+        .directive('faq', faq);
+
+    faq.$inject = [
+        '$http'
+    ];
+
+    function faq($http) {
+        return {
+            templateUrl: 'view/faq.directive.html',
+            link: link,
+            restrict: 'EA',
+            scope: {
                 header: '@',
                 source: '@',
                 opened: '@'
             }
-        });
+        };
 
-    Controller.$inject = [
-        '$http'
-    ];
+        function link(scope, element, attrs, vm) {
+            scope.items = [];
 
-    function Controller($http) {
-        var vm = this;
-        vm.items = [];
+            activate();
 
-        activate();
+            ////////////////
 
-        ////////////////
-
-        function activate() {
-            if (vm.source.match(/^(https?:)?\/{2}/i)) {
-                load(vm.source)
-                    .then(function () {
-                        vm.items = _faqParse(vm.source);
-                    });
-            } else {
-                vm.items = _faqParse(vm.source);
+            /**
+             * @ngdoc method
+             * @name ui.ap.directives:faq#activate
+             * @methodOf ui.ap.directives:faq
+             * @description
+             * Activates directive
+             */
+            function activate() {
+                if (scope.source.match(/^(https?:)?\/{2}/i)) {
+                    load(scope.source)
+                        .then(function (data) {
+                            scope.source = data;
+                            scope.items = _faqParse(scope.source);
+                        });
+                } else {
+                    scope.items = _faqParse(scope.source);
+                }
             }
-        }
 
-        /**
-         * @ngdoc method
-         * @name ui.ap.directives:faq#load
-         * @methodOf ui.ap.directives:faq
-         * @param {String} url Url to FAQ content
-         * @returns {Object} promise
-         * @description
-         * Loads FAQ from server
-         */
-        function load(url) {
-            return $http
-                .get(url)
-                .then(function (res) {
-                    vm.source = res.data;
-                });
-        }
+            /**
+             * @ngdoc method
+             * @name ui.ap.directives:faq#load
+             * @methodOf ui.ap.directives:faq
+             * @param {String} url Url to FAQ content
+             * @returns {Object} promise
+             * @description
+             * Loads FAQ from server
+             */
+            function load(url) {
+                return $http
+                    .get(url)
+                    .then(function (res) {
+                        return res.data;
+                    });
+            }
 
-        /**
-         * @ngdoc method
-         * @name ui.ap.directives:faq#load
-         * @methodOf ui.ap.directives:faq
-         * @param {String} what Text
-         * @returns {Object} promise
-         * @description
-         * Split text to list of pairs: Question / Answer
-         */
-        function _faqParse(what) {
-            var ret = [];
-            angular.forEach(what.split(/\n\r?\n\r?/), function (qa) {
-                qa = qa.split(/\n\r?/);
-                ret.push({
-                    q: qa.shift(),
-                    a: qa.join('<br/>'),
-                    opened: false
+            /**
+             * @ngdoc method
+             * @name ui.ap.directives:faq#load
+             * @methodOf ui.ap.directives:faq
+             * @param {String} what Text
+             * @returns {Object} promise
+             * @description
+             * Split text to list of pairs: Question / Answer
+             */
+            function _faqParse(what) {
+                var ret = [];
+                angular.forEach(what.split(/\n\r?\n\r?/), function (qa) {
+                    qa = qa.split(/\n\r?/);
+                    ret.push({
+                        q: qa.shift(),
+                        a: qa.join('<br/>'),
+                        opened: false
+                    });
                 });
-            });
-            return ret;
+                return ret;
+            }
         }
     }
 })(window.angular);
@@ -552,7 +563,7 @@
             if (!opts.title) {
                 opts.title = $rootScope.projectName;
             }
-            opts.uid = 'as-modal-dialog';
+            opts.uid = 'ap-modal-dialog';
             opts.openedClass = 'modal-info';
             return show(opts);
         }
@@ -566,7 +577,7 @@
             if (!opts.title) {
                 opts.title = $rootScope.projectName;
             }
-            opts.uid = 'as-modal-dialog';
+            opts.uid = 'ap-modal-dialog';
             opts.openedClass = 'modal-success';
             return show(opts);
         }
@@ -580,7 +591,7 @@
             if (!opts.title) {
                 opts.title = 'Error';
             }
-            opts.uid = 'as-modal-dialog';
+            opts.uid = 'ap-modal-dialog';
             opts.openedClass = 'modal-danger';
             return show(opts);
         }
@@ -594,7 +605,7 @@
             if (!opts.title) {
                 opts.title = $rootScope.projectName;
             }
-            opts.uid = 'as-modal-dialog';
+            opts.uid = 'ap-modal-dialog';
             opts.cancel = true;
             return show(opts);
         }
@@ -626,7 +637,7 @@
                 opts.openedClass = '';
             }
             if (!opts.uid) {
-                opts.uid = utils.uniqueId('as-modal');
+                opts.uid = utils.uniqueId('ap-modal');
             }
             if (!_modals[opts.uid]) {
                 _modals[opts.uid] = $uibModal.open(opts);
@@ -982,7 +993,7 @@
              */
             function inputDirty() {
                 // TODO: add params describes behavior like mode: d (if dirty)/ s (if submitted0/das (d and s)/dos (d or s)
-                return formInput && formInput.$dirty || form && form.$submitted;
+                return formInput && formInput.$pristine && formInput.$dirty || form && form.$submitted;
             }
 
             /**
@@ -1245,8 +1256,8 @@ try {
   module = angular.module('ui.ap', []);
 }
 module.run(['$templateCache', function($templateCache) {
-  $templateCache.put('view/faq.component.html',
-    '<div class="ap-faq"><h3>{{ vm.header }}</h3><ul class="list-unstyled"><li class="ap-faq__item" ng-repeat="item in vm.items" ng-click="item.opened = !item.opened"><div class="ap-faq__item__q" ng-class="{\'ap-active\' : item.opened}">{{ item.q }}</div><div ng-show="item.opened" class="ap-faq__item__a" ng-bind-html="item.a"></div></li></ul></div>');
+  $templateCache.put('view/faq.directive.html',
+    '<div class="ap-faq"><h3 ng-bind="header"></h3><ul class="list-unstyled"><li class="ap-faq__item" ng-repeat="item in items" ng-click="item.opened = !item.opened"><div class="ap-faq__item__q" ng-class="{\'ap-active\' : item.opened}" ng-bind="item.q"></div><div ng-show="item.opened" class="ap-faq__item__a" ng-bind-html="item.a"></div></li></ul></div>');
 }]);
 })();
 
@@ -1270,7 +1281,7 @@ try {
 }
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('view/quickSearch.directive.html',
-    '<div class="as-inner-addon as-search-addon" ng-class="{\'as-dirty-addon\' : quickSearchText}"><input class="form-control" type="text" placeholder="Quick search" ng-model="quickSearchText"> <span class="glyphicon glyphicon-search"></span> <span class="glyphicon glyphicon-remove" ng-click="quickSearchText = \'\'"></span></div>');
+    '<div class="ap-inner-addon ap-search-addon" ng-class="{\'ap-dirty-addon\' : quickSearchText}"><input class="form-control" type="text" placeholder="Quick search" ng-model="quickSearchText"> <span class="glyphicon glyphicon-search"></span> <span class="glyphicon glyphicon-remove" ng-click="quickSearchText = \'\'"></span></div>');
 }]);
 })();
 
