@@ -454,7 +454,7 @@
         };
 
         function link(scope, element, attrs, vm) {
-            scope.items = [];
+            scope.sections = [];
 
             activate();
 
@@ -472,10 +472,10 @@
                     load(scope.source)
                         .then(function (data) {
                             scope.source = data;
-                            scope.items = _faqParse(scope.source);
+                            scope.sections = _faqParse(scope.source);
                         });
                 } else {
-                    scope.items = _faqParse(scope.source);
+                    scope.sections = _faqParse(scope.source);
                 }
             }
 
@@ -507,13 +507,31 @@
              */
             function _faqParse(what) {
                 var ret = [];
-                angular.forEach(what.split(/\n\r?\n\r?/), function (qa) {
-                    qa = qa.split(/\n\r?/);
-                    ret.push({
+                var sectionIdx = -1;
+                var pairs = what.split(/\n\r?\n\r?/);
+                angular.forEach(pairs, function (_qa, _idx) {
+                    var qa = _qa.split(/\n\r?/);
+                    var pair = {
                         q: qa.shift(),
                         a: qa.join('<br/>'),
                         opened: false
-                    });
+                    };
+                    if (pair.a.match(/^[=-]{2,}/)) {
+                        // empty section
+                        ret.push({
+                            label: pair.q,
+                            items: []
+                        });
+                        sectionIdx++;
+                    } else if (_idx === 0) {
+                        // empty section
+                        ret.push({
+                            items: []
+                        });
+                        sectionIdx = 0;
+                    } else {
+                        ret[sectionIdx].items.push(pair);
+                    }
                 });
                 return ret;
             }
@@ -1257,7 +1275,7 @@ try {
 }
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('view/faq.directive.html',
-    '<div class="ap-faq"><h3 ng-bind="header"></h3><ul class="list-unstyled"><li class="ap-faq__item" ng-repeat="item in items" ng-click="item.opened = !item.opened"><div class="ap-faq__item__q" ng-class="{\'ap-active\' : item.opened}" ng-bind="item.q"></div><div ng-show="item.opened" class="ap-faq__item__a" ng-bind-html="item.a"></div></li></ul></div>');
+    '<div class="ap-faq"><h3 ng-bind="header"></h3><div class="ap-faq-section" ng-repeat="section in sections"><h4 ng-if="section.label" ng-bind="section.label"></h4><ul class="list-unstyled"><li class="ap-faq__item" ng-repeat="item in section.items" ng-click="item.opened = !item.opened"><div class="ap-faq__item__q" ng-class="{\'ap-active\' : item.opened}" ng-bind="item.q"></div><div ng-show="item.opened" class="ap-faq__item__a" ng-bind-html="item.a"></div></li></ul></div></div>');
 }]);
 })();
 

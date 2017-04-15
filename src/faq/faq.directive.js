@@ -30,7 +30,7 @@
         };
 
         function link(scope, element, attrs, vm) {
-            scope.items = [];
+            scope.sections = [];
 
             activate();
 
@@ -48,10 +48,10 @@
                     load(scope.source)
                         .then(function (data) {
                             scope.source = data;
-                            scope.items = _faqParse(scope.source);
+                            scope.sections = _faqParse(scope.source);
                         });
                 } else {
-                    scope.items = _faqParse(scope.source);
+                    scope.sections = _faqParse(scope.source);
                 }
             }
 
@@ -83,13 +83,31 @@
              */
             function _faqParse(what) {
                 var ret = [];
-                angular.forEach(what.split(/\n\r?\n\r?/), function (qa) {
-                    qa = qa.split(/\n\r?/);
-                    ret.push({
+                var sectionIdx = -1;
+                var pairs = what.split(/\n\r?\n\r?/);
+                angular.forEach(pairs, function (_qa, _idx) {
+                    var qa = _qa.split(/\n\r?/);
+                    var pair = {
                         q: qa.shift(),
                         a: qa.join('<br/>'),
                         opened: false
-                    });
+                    };
+                    if (pair.a.match(/^[=-]{2,}/)) {
+                        // empty section
+                        ret.push({
+                            label: pair.q,
+                            items: []
+                        });
+                        sectionIdx++;
+                    } else if (_idx === 0) {
+                        // empty section
+                        ret.push({
+                            items: []
+                        });
+                        sectionIdx = 0;
+                    } else {
+                        ret[sectionIdx].items.push(pair);
+                    }
                 });
                 return ret;
             }

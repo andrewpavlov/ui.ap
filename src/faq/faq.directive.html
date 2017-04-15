@@ -1,14 +1,19 @@
 <div class="ap-faq">
     <h3 ng-bind="header"></h3>
-    <ul class="list-unstyled">
-        <li class="ap-faq__item"
-            ng-repeat="item in items"
-            ng-click="item.opened = !item.opened">
-            <div class="ap-faq__item__q"
-                 ng-class="{'ap-active' : item.opened}"
-                 ng-bind="item.q"
-            ></div>
-            <div ng-show="item.opened" class="ap-faq__item__a" ng-bind-html="item.a"></div>
-        </li>
-    </ul>
+    <div class="ap-faq-section"
+         ng-repeat="section in sections"
+    >
+        <h4 ng-if="section.label" ng-bind="section.label"></h4>
+        <ul class="list-unstyled">
+            <li class="ap-faq__item"
+                ng-repeat="item in section.items"
+                ng-click="item.opened = !item.opened">
+                <div class="ap-faq__item__q"
+                     ng-class="{'ap-active' : item.opened}"
+                     ng-bind="item.q"
+                ></div>
+                <div ng-show="item.opened" class="ap-faq__item__a" ng-bind-html="item.a"></div>
+            </li>
+        </ul>
+    </div>
 </div>
