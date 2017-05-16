@@ -4,6 +4,7 @@
   "description": "ui components",
   "author": "Andrey Pavlov <andrew.m.pavlov@gmail.com>",
   "devDependencies": {
+    "browser-sync": "^2.18.11",
     "gulp": "^3.9.1",
     "gulp-concat": "^2.6.1",
     "gulp-htmlmin": "^3.0.0",
