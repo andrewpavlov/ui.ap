@@ -212,25 +212,21 @@
         .factory('beforeLeave', beforeLeave);
 
     beforeLeave.$inject = [
-        '$rootScope',
+        '$transitions',
         '$window',
         '$state',
         'modalDialog'
     ];
 
-    function beforeLeave($rootScope, $window, $state, modalDialog) {
+    function beforeLeave($transitions, $window, $state, modalDialog) {
         var exports = {
             register: register,
             unregister: unregister
         };
 
-        var _routeEvents = [
-                //'$locationChangeStart',
-                '$stateChangeStart'
-            ],
-            _listeners = [],
-            _subscribers = {},
-            _dialog = false;
+        var _listener = false;
+        var _subscribers = {};
+        var _dialog = false;
 
         return exports;
 
@@ -252,13 +248,10 @@
             if (!uid) {
                 uid = utils.uniqueId();
             }
-            if (!_listeners.length) {
-                // subscribe
+            if (!_listener) {
+                _listener = true;
                 angular.element($window).bind('beforeunload', onWindow);
-                _routeEvents.forEach(function (_e) {
-                    $rootScope.$on(_e, onRoute);
-                    _listeners.push(_e);
-                });
+                $transitions.onStart({}, onRoute);
             }
             _subscribers[uid] = fn;
             return uid;
@@ -274,9 +267,6 @@
          */
         function unregister(uid) {
             if (!uid) {
-                // angular.forEach(_subscribers, function (_fn, _uid) {
-                //     unregister(_uid);
-                // });
                 _subscribers = {};
             } else if (angular.isDefined(_subscribers[uid])) {
                 delete _subscribers[uid];
@@ -292,9 +282,11 @@
          * @description
          * $stateChangeStart CB function.
          */
-        function onRoute(ev, to, params, from, fromParams) {
+        function onRoute(transition) {
+            var to = transition.to();
+            var params = transition.params();
             if (_dialog) {
-                ev.preventDefault();
+                transition.abort();
                 return false;
             }
 
@@ -310,13 +302,12 @@
                     _dialog = false;
                     unregister();
                     $state.go(to.name, params);
-                    //$rootScope.$broadcast('resetAllForms');
                 })
                 .catch(function () {
                     _dialog = false;
                 });
 
-            ev.preventDefault();
+            transition.abort();
             return false;
         }
 
@@ -1311,7 +1302,7 @@ try {
 }
 module.run(['$templateCache', function($templateCache) {
   $templateCache.put('view/textInput.directive.html',
-    '<div class="ap-text-input-wrapper"><label class="ap-text-input-label" ng-if="label" ng-click="onFocus()" for="{{ inputId }}" ng-bind="label"></label><input class="ap-text-input-value form-control" type="{{ type }}" name="{{ name }}" id="{{ inputId }}" ng-pattern="ngPattern" ng-required="ngRequired" ng-disabled="ngDisabled" ng-readonly="ngReadonly" ng-change="wpChange()" ng-model="ngModel"><ng-transclude></ng-transclude><span class="ap-text-input-label-error" ng-bind="errorMessage"></span></div>');
+    '<div class="ap-text-input-wrapper"><label class="ap-text-input-label" ng-if="label" ng-click="onFocus()" for="{{ inputId }}" ng-bind="label"></label> <input class="ap-text-input-value form-control" type="{{ type }}" name="{{ name }}" id="{{ inputId }}" ng-pattern="ngPattern" ng-required="ngRequired" ng-disabled="ngDisabled" ng-readonly="ngReadonly" ng-change="wpChange()" ng-model="ngModel"><ng-transclude></ng-transclude><span class="ap-text-input-label-error" ng-bind="errorMessage"></span></div>');
 }]);
 })();
 
